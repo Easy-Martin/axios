@@ -4,11 +4,10 @@
   "description": "给予axios增加一个fetch模式",
   "main": "index.js",
   "scripts": {
+    "test": "grunt test",
     "start": "node ./sandbox/server.js",
     "build": "grunt build",
-    "preversion": "npm test",
     "version": "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json",
-    "postversion": "git push && git push --tags",
     "examples": "node ./examples/server.js",
     "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "fix": "eslint --fix lib/**/*.js"
