@@ -1,4 +1,4 @@
-/* @huangjingjing/axios-fetch v0.0.2 | (c) 2018 by Matt Zabriskie */
+/* @huangjingjing/axios-fetch v0.0.3 | (c) 2018 by Matt Zabriskie */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -879,7 +879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var defaults = {
 	  xhrMode: 'XMLHttpRequest',
-	  mode: undefined,
+	  mode: 'cors',
 	  cache: 'default',
 	  credentials: 'include',
 	  redirect: undefined,
