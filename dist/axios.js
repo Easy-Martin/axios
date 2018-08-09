@@ -842,77 +842,93 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	'use strict'
 	
-	var utils = __webpack_require__(2);
-	var normalizeHeaderName = __webpack_require__(12);
+	var utils = __webpack_require__(2)
+	var normalizeHeaderName = __webpack_require__(12)
 	
 	var DEFAULT_CONTENT_TYPE = {
 	  'Content-Type': 'application/x-www-form-urlencoded'
-	};
+	}
 	
 	function setContentTypeIfUnset(headers, value) {
-	  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-	    headers['Content-Type'] = value;
+	  if (
+	    !utils.isUndefined(headers) &&
+	    utils.isUndefined(headers['Content-Type'])
+	  ) {
+	    headers['Content-Type'] = value
 	  }
 	}
 	
 	function getDefaultAdapter() {
-	  var adapter;
+	  var adapter
 	  // Only Node.JS has a process variable that is of [[Class]] process
-	  if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
+	  if (
+	    typeof process !== 'undefined' &&
+	    Object.prototype.toString.call(process) === '[object process]'
+	  ) {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(13);
+	    adapter = __webpack_require__(13)
 	  } else if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(13);
+	    adapter = __webpack_require__(13)
 	  }
-	  return adapter;
+	  return adapter
 	}
 	
 	var defaults = {
-	  mode:'cors',
-	  xhrMode:'XMLHttpRequest',
-	  cache:'no-cache',
-	  credentials:'include',
-	  redirect:'follow',
-	  referrer:'no-referrer',
+	  xhrMode: 'XMLHttpRequest',
+	  mode: undefined,
+	  cache: 'default',
+	  credentials: 'include',
+	  redirect: undefined,
+	  referrer: undefined,
 	  adapter: getDefaultAdapter(),
-	  transformRequest: [function transformRequest(data, headers) {
-	    normalizeHeaderName(headers, 'Accept');
-	    normalizeHeaderName(headers, 'Content-Type');
-	    if (utils.isFormData(data) ||
-	      utils.isArrayBuffer(data) ||
-	      utils.isBuffer(data) ||
-	      utils.isStream(data) ||
-	      utils.isFile(data) ||
-	      utils.isBlob(data)
-	    ) {
-	      return data;
+	  transformRequest: [
+	    function transformRequest(data, headers) {
+	      normalizeHeaderName(headers, 'Accept')
+	      normalizeHeaderName(headers, 'Content-Type')
+	      if (
+	        utils.isFormData(data) ||
+	        utils.isArrayBuffer(data) ||
+	        utils.isBuffer(data) ||
+	        utils.isStream(data) ||
+	        utils.isFile(data) ||
+	        utils.isBlob(data)
+	      ) {
+	        return data
+	      }
+	      if (utils.isArrayBufferView(data)) {
+	        return data.buffer
+	      }
+	      if (utils.isURLSearchParams(data)) {
+	        setContentTypeIfUnset(
+	          headers,
+	          'application/x-www-form-urlencoded;charset=utf-8'
+	        )
+	        return data.toString()
+	      }
+	      if (utils.isObject(data)) {
+	        setContentTypeIfUnset(headers, 'application/json;charset=utf-8')
+	        return JSON.stringify(data)
+	      }
+	      return data
 	    }
-	    if (utils.isArrayBufferView(data)) {
-	      return data.buffer;
-	    }
-	    if (utils.isURLSearchParams(data)) {
-	      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-	      return data.toString();
-	    }
-	    if (utils.isObject(data)) {
-	      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-	      return JSON.stringify(data);
-	    }
-	    return data;
-	  }],
+	  ],
 	
-	  transformResponse: [function transformResponse(data) {
-	    /*eslint no-param-reassign:0*/
-	    if (typeof data === 'string') {
-	      try {
-	        data = JSON.parse(data);
-	      } catch (e) { /* Ignore */ }
+	  transformResponse: [
+	    function transformResponse(data) {
+	      /*eslint no-param-reassign:0*/
+	      if (typeof data === 'string') {
+	        try {
+	          data = JSON.parse(data)
+	        } catch (e) {
+	          /* Ignore */
+	        }
+	      }
+	      return data
 	    }
-	    return data;
-	  }],
+	  ],
 	
 	  /**
 	   * A timeout in milliseconds to abort a request. If set to 0 (default) a
@@ -926,25 +942,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  maxContentLength: -1,
 	
 	  validateStatus: function validateStatus(status) {
-	    return status >= 200 && status < 300;
+	    return status >= 200 && status < 300
 	  }
-	};
+	}
 	
 	defaults.headers = {
 	  common: {
-	    'Accept': 'application/json, text/plain, */*'
+	    Accept: 'application/json, text/plain, */*'
 	  }
-	};
+	}
 	
 	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-	  defaults.headers[method] = {};
-	});
+	  defaults.headers[method] = {}
+	})
 	
 	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-	});
+	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE)
+	})
 	
-	module.exports = defaults;
+	module.exports = defaults
 
 
 /***/ }),

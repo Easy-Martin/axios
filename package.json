@@ -1,6 +1,6 @@
 {
-  "name": "fetch-axios",
-  "version": "0.18.0",
+  "name": "@huangjingjing/axios-fetch",
+  "version": "0.0.1",
   "description": "给予axios增加一个fetch模式",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/axios/axios.git"
+    "url": "git+https://github.com/axios/axios.git"
   },
   "keywords": [
     "fetch",
@@ -25,7 +25,7 @@
     "promise",
     "http"
   ],
-  "author": "Matt Zabriskie",
+  "author": "Martin Fork by Axios",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/axios/axios/issues"
@@ -81,5 +81,10 @@
       "path": "./dist/axios.min.js",
       "threshold": "5kB"
     }
-  ]
+  ],
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "test"
+  }
 }
