@@ -842,38 +842,38 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict'
+	'use strict';
 	
-	var utils = __webpack_require__(2)
-	var normalizeHeaderName = __webpack_require__(12)
+	var utils = __webpack_require__(2);
+	var normalizeHeaderName = __webpack_require__(12);
 	
 	var DEFAULT_CONTENT_TYPE = {
 	  'Content-Type': 'application/x-www-form-urlencoded'
-	}
+	};
 	
 	function setContentTypeIfUnset(headers, value) {
 	  if (
 	    !utils.isUndefined(headers) &&
 	    utils.isUndefined(headers['Content-Type'])
 	  ) {
-	    headers['Content-Type'] = value
+	    headers['Content-Type'] = value;
 	  }
 	}
 	
 	function getDefaultAdapter() {
-	  var adapter
+	  var adapter;
 	  // Only Node.JS has a process variable that is of [[Class]] process
 	  if (
 	    typeof process !== 'undefined' &&
 	    Object.prototype.toString.call(process) === '[object process]'
 	  ) {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(13)
+	    adapter = __webpack_require__(13);
 	  } else if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(13)
+	    adapter = __webpack_require__(13);
 	  }
-	  return adapter
+	  return adapter;
 	}
 	
 	var defaults = {
@@ -886,8 +886,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  adapter: getDefaultAdapter(),
 	  transformRequest: [
 	    function transformRequest(data, headers) {
-	      normalizeHeaderName(headers, 'Accept')
-	      normalizeHeaderName(headers, 'Content-Type')
+	      normalizeHeaderName(headers, 'Accept');
+	      normalizeHeaderName(headers, 'Content-Type');
 	      if (
 	        utils.isFormData(data) ||
 	        utils.isArrayBuffer(data) ||
@@ -896,23 +896,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        utils.isFile(data) ||
 	        utils.isBlob(data)
 	      ) {
-	        return data
+	        return data;
 	      }
 	      if (utils.isArrayBufferView(data)) {
-	        return data.buffer
+	        return data.buffer;
 	      }
 	      if (utils.isURLSearchParams(data)) {
 	        setContentTypeIfUnset(
 	          headers,
 	          'application/x-www-form-urlencoded;charset=utf-8'
-	        )
-	        return data.toString()
+	        );
+	        return data.toString();
 	      }
 	      if (utils.isObject(data)) {
-	        setContentTypeIfUnset(headers, 'application/json;charset=utf-8')
-	        return JSON.stringify(data)
+	        setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+	        return JSON.stringify(data);
 	      }
-	      return data
+	      return data;
 	    }
 	  ],
 	
@@ -921,12 +921,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      /*eslint no-param-reassign:0*/
 	      if (typeof data === 'string') {
 	        try {
-	          data = JSON.parse(data)
+	          data = JSON.parse(data);
 	        } catch (e) {
 	          /* Ignore */
 	        }
 	      }
-	      return data
+	      return data;
 	    }
 	  ],
 	
@@ -942,25 +942,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  maxContentLength: -1,
 	
 	  validateStatus: function validateStatus(status) {
-	    return status >= 200 && status < 300
+	    return status >= 200 && status < 300;
 	  }
-	}
+	};
 	
 	defaults.headers = {
 	  common: {
 	    Accept: 'application/json, text/plain, */*'
 	  }
-	}
+	};
 	
 	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-	  defaults.headers[method] = {}
-	})
+	  defaults.headers[method] = {};
+	});
 	
 	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE)
-	})
+	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+	});
 	
-	module.exports = defaults
+	module.exports = defaults;
 
 
 /***/ }),
@@ -993,10 +993,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var parseHeaders = __webpack_require__(17);
 	var isURLSameOrigin = __webpack_require__(18);
 	var createError = __webpack_require__(15);
-	var fetchAdapter = __webpack_require__(19)
+	var fetchAdapter = __webpack_require__(19);
 	module.exports = function xhrAdapter(config) {
-	  if(config.xhrMode === 'fetch'){
-	    return fetchAdapter(config)
+	  if (config.xhrMode === 'fetch') {
+	    return fetchAdapter(config);
 	  }
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
 	    var requestData = config.data;
@@ -1015,7 +1015,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
 	    }
 	
-	    request.open(config.method.toUpperCase(), buildURL(config.url, config.params, config.paramsSerializer), true);
+	    request.open(
+	      config.method.toUpperCase(),
+	      buildURL(config.url, config.params, config.paramsSerializer),
+	      true
+	    );
 	
 	    // Set the request timeout in MS
 	    request.timeout = config.timeout;
@@ -1030,13 +1034,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // handled by onerror instead
 	      // With one exception: request that using file: protocol, most browsers
 	      // will return status as 0 even though it's a successful request
-	      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+	      if (
+	        request.status === 0 &&
+	        !(request.responseURL && request.responseURL.indexOf('file:') === 0)
+	      ) {
 	        return;
 	      }
 	
 	      // Prepare the response
-	      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-	      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
+	      var responseHeaders =
+	        'getAllResponseHeaders' in request
+	          ? parseHeaders(request.getAllResponseHeaders())
+	          : null;
+	      var responseData =
+	        !config.responseType || config.responseType === 'text'
+	          ? request.responseText
+	          : request.response;
 	      var response = {
 	        data: responseData,
 	        status: request.status,
@@ -1076,8 +1089,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // Handle timeout
 	    request.ontimeout = function handleTimeout() {
-	      reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED',
-	        request));
+	      reject(
+	        createError(
+	          'timeout of ' + config.timeout + 'ms exceeded',
+	          config,
+	          'ECONNABORTED',
+	          request
+	        )
+	      );
 	
 	      // Clean up request
 	      request = null;
@@ -1090,9 +1109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var cookies = __webpack_require__(20);
 	
 	      // Add xsrf header
-	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-	        cookies.read(config.xsrfCookieName) :
-	        undefined;
+	      var xsrfValue =
+	        (config.withCredentials || isURLSameOrigin(config.url)) &&
+	        config.xsrfCookieName
+	          ? cookies.read(config.xsrfCookieName)
+	          : undefined;
 	
 	      if (xsrfValue) {
 	        requestHeaders[config.xsrfHeaderName] = xsrfValue;
@@ -1102,7 +1123,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Add headers to the request
 	    if ('setRequestHeader' in request) {
 	      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-	        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
+	        if (
+	          typeof requestData === 'undefined' &&
+	          key.toLowerCase() === 'content-type'
+	        ) {
 	          // Remove Content-Type if data is undefined
 	          delete requestHeaders[key];
 	        } else {
@@ -1401,75 +1425,81 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict'
+	'use strict';
 	
-	var utils = __webpack_require__(2)
-	var settle = __webpack_require__(14)
-	var buildURL = __webpack_require__(6)
-	var isURLSameOrigin = __webpack_require__(18)
-	var createError = __webpack_require__(15)
+	var utils = __webpack_require__(2);
+	var settle = __webpack_require__(14);
+	var buildURL = __webpack_require__(6);
+	var isURLSameOrigin = __webpack_require__(18);
+	var createError = __webpack_require__(15);
 	
 	function requestFetch(request, handleLoad, error) {
 	  return fetch(request)
-	          .then(function(response){ handleLoad(response)})
-	          .catch(function(e){error(e)})
+	    .then(function(response) {
+	      handleLoad(response);
+	    })
+	    .catch(function(e) {
+	      error(e);
+	    });
 	}
 	
-	function requestTimeout(timeout, handleTimeout) {
+	function requestTimeout(timeout) {
 	  return new Promise(function dispatchRequestTimeout(resolve, reject) {
 	    setTimeout(function() {
-	      reject()
-	    }, timeout)
-	  })
+	      reject();
+	    }, timeout);
+	  });
 	}
 	
 	module.exports = function fetchAdapter(config) {
 	  return new Promise(function dispatchFetchRequest(resolve, reject) {
-	    var requestData = config.data
-	    var requestHeaders = config.headers
+	    var requestData = config.data;
+	    var requestHeaders = config.headers;
 	
 	    if (utils.isFormData(requestData)) {
-	      delete requestHeaders['Content-Type'] // Let the browser set it
+	      delete requestHeaders['Content-Type']; // Let the browser set it
 	    }
 	    // HTTP basic authentication
 	    if (config.auth) {
-	      var username = config.auth.username || ''
-	      var password = config.auth.password || ''
-	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password)
+	      var username = config.auth.username || '';
+	      var password = config.auth.password || '';
+	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
 	    }
 	
 	    // Add xsrf header
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(20)
+	      var cookies = __webpack_require__(20);
 	
 	      // Add xsrf header
 	      var xsrfValue =
 	        (config.withCredentials || isURLSameOrigin(config.url)) &&
 	        config.xsrfCookieName
 	          ? cookies.read(config.xsrfCookieName)
-	          : undefined
+	          : undefined;
 	
 	      if (xsrfValue) {
-	        requestHeaders[config.xsrfHeaderName] = xsrfValue
+	        requestHeaders[config.xsrfHeaderName] = xsrfValue;
 	      }
 	    }
 	
-	      var headers = new Headers()
-	      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-	        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-	          // Remove Content-Type if data is undefined
-	          delete requestHeaders[key];
-	        } else {
-	          // Otherwise add header to the request
-	          headers.append(key, val);
-	        }
-	      });
-	
+	    var headers = new Headers();
+	    utils.forEach(requestHeaders, function setRequestHeader(val, key) {
+	      if (
+	        typeof requestData === 'undefined' &&
+	        key.toLowerCase() === 'content-type'
+	      ) {
+	        // Remove Content-Type if data is undefined
+	        delete requestHeaders[key];
+	      } else {
+	        // Otherwise add header to the request
+	        headers.append(key, val);
+	      }
+	    });
 	
 	    var options = {
-	      headers:headers,
+	      headers: headers,
 	      body: requestData,
 	      method: config.method.toUpperCase(),
 	      mode: config.mode,
@@ -1477,16 +1507,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      credentials: config.credentials,
 	      redirect: config.redirect, // manual, *follow, error
 	      referrer: config.referrer // *client, no-referrer
-	    }
+	    };
 	
 	    if (config.method.toUpperCase() === 'GET') {
-	      delete options.body
+	      delete options.body;
 	    }
 	
 	    var request = new Request(
 	      buildURL(config.url, config.params, config.paramsSerializer),
 	      options
-	    )
+	    );
 	
 	    // Handle timeout
 	    request.handleTimeout = function handleTimeout() {
@@ -1497,73 +1527,72 @@ return /******/ (function(modules) { // webpackBootstrap
 	          'ECONNABORTED',
 	          request
 	        )
-	      )
+	      );
 	
 	      // Clean up request
-	      request = null
-	    }
+	      request = null;
+	    };
 	
 	    // Handle low level network errors
 	    request.handleError = function handleError(e) {
 	      // Real errors are hidden from us by the browser
 	      // onerror should only fire if it's a network error
-	      reject(createError('Network Error', config, null, request, e))
+	      reject(createError('Network Error', config, null, request, e));
 	
 	      // Clean up request
-	      request = null
-	    }
+	      request = null;
+	    };
 	
 	    request.handleLoad = function(response) {
 	      if (!response.ok) {
-	        error(response)
-	        return
+	        error(response);
+	        return;
 	      }
 	      response.json().then(function dispatchRequestJSON(data) {
 	        if (data.hasError) {
-	          error(response)
+	          error(response);
 	        } else {
 	          var rep = {
-	            data:data,
+	            data: data,
 	            status: response.status,
 	            statusText: response.statusText,
 	            headers: response.headers,
 	            config: config,
 	            request: request
-	          }
+	          };
 	
-	          settle(resolve, reject, rep)
+	          settle(resolve, reject, rep);
 	        }
 	        // Clean up request
-	        request = null
-	      })
-	    }
+	        request = null;
+	      });
+	    };
 	
 	    // Handle progress if needed
 	    if (typeof config.onDownloadProgress === 'function') {
-	      request.addEventListener('progress', config.onDownloadProgress)
+	      request.addEventListener('progress', config.onDownloadProgress);
 	    }
 	
 	    // Not all browsers support upload events
 	    if (typeof config.onUploadProgress === 'function' && request.upload) {
-	      request.upload.addEventListener('progress', config.onUploadProgress)
+	      request.upload.addEventListener('progress', config.onUploadProgress);
 	    }
 	
-	    request.timeout = config.timeout
+	    request.timeout = config.timeout;
 	
 	    if (request.timeout) {
 	      return Promise.race([
 	        requestFetch(request, request.handleLoad, request.handleError),
 	        requestTimeout(config.timeout, request.handleTimeout)
-	      ]).catch(request.handleTimeout)
-	    } else {
-	      return requestFetch(request, request.handleLoad, request.handleError)
+	      ]).catch(request.handleTimeout);
 	    }
+	    return requestFetch(request, request.handleLoad, request.handleError);
 	
 	    // Set the request timeout in MS
 	
 	    // Listen for ready state
-	  })
-	}
+	  });
+	};
 
 
 /***/ }),
