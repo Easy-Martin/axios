@@ -1,22 +1,22 @@
 {
-  "name": "axios",
+  "name": "@huangjingjing/axios-fetch",
   "main": "./dist/axios.js",
-  "version": "0.18.0",
+  "version": "0.0.2",
   "homepage": "https://github.com/axios/axios",
   "authors": [
     "Matt Zabriskie"
   ],
-  "description": "Promise based HTTP client for the browser and node.js",
+  "description": "给予axios增加一个fetch模式",
   "moduleType": [
     "amd",
     "globals"
   ],
   "keywords": [
+    "fetch",
     "xhr",
-    "http",
     "ajax",
     "promise",
-    "node"
+    "http"
   ],
   "license": "MIT",
   "ignore": [

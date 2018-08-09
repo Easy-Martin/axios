@@ -1,3 +1,4 @@
+/* @huangjingjing/axios-fetch v0.0.2 | (c) 2018 by Matt Zabriskie */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
