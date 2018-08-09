@@ -4,7 +4,7 @@
   "description": "给予axios增加一个fetch模式",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test && bundlesize",
+    "test": "grunt test",
     "start": "node ./sandbox/server.js",
     "build": "grunt build",
     "preversion": "npm test",
