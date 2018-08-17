@@ -10,6 +10,26 @@
 
 Promise based HTTP client for the browser and node.js
 
+
+## 启用fetch模式
+
+```
+yarn add @huangjingjing/axios-fetch
+
+
+import fetchAxios from '@huangjingjing/axios-fetch'
+
+fetchAxios.create({
+  xhrMode:'fetch',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8'
+  }
+}
+//用法和axios一样，需要配置fetch参数直接加到options [Fetch Request](https://developer.mozilla.org/zh-CN/docs/Web/API/Request) API
+```
+
+
 ## Features
 
 - Make [XMLHttpRequests](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) from the browser
