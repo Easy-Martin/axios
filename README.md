@@ -26,9 +26,9 @@ fetchAxios.create({
     'Content-Type': 'application/json; charset=utf-8'
   }
 }
-//用法和axios一样，需要配置fetch参数直接加到options [Fetch Request](https://developer.mozilla.org/zh-CN/docs/Web/API/Request) API
-```
 
+```
+- 用法和axios一样，需要配置fetch参数直接加到options [`Fetch Request`](https://developer.mozilla.org/zh-CN/docs/Web/API/Request) API
 
 ## Features
 
