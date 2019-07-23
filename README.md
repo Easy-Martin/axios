@@ -14,13 +14,13 @@ Promise based HTTP client for the browser and node.js
 ## 启用fetch模式
 
 ```
-yarn add @huangjingjing/axios-fetch
+yarn add fetch-like-axios
 
 
-import fetchAxios from '@huangjingjing/axios-fetch'
+import fetchAxios from 'fetch-like-axios'
 
 fetchAxios.create({
-  xhrMode:'fetch',
+  xhrMode:'fetch', // or 'xhr'
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
