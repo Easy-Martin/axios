@@ -1,6 +1,6 @@
 {
   "name": "fetch-like-axios",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "给予axios增加一个fetch模式",
   "main": "index.js",
   "scripts": {
