@@ -1,4 +1,3 @@
-/* @huangjingjing/axios-fetch v1.0.1 | (c) 2018 by Matt Zabriskie */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1426,7 +1425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var utils = __webpack_require__(2);
 	var settle = __webpack_require__(14);
@@ -1444,27 +1443,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	}
 	
-	function requestTimeout(timeout) {
-	  return new Promise(function dispatchRequestTimeout(resolve, reject) {
+	function requestTimeout(timeout, handleTimeout, controller) {
+	  var promise = new Promise(function dispatchRequestTimeout(_, reject) {
 	    setTimeout(function() {
 	      reject();
 	    }, timeout);
+	  });
+	
+	  return promise.catch(function() {
+	    controller && controller.abort();
+	    handleTimeout();
 	  });
 	}
 	
 	module.exports = function fetchAdapter(config) {
 	  return new Promise(function dispatchFetchRequest(resolve, reject) {
+	    var controller;
+	    var signal;
+	
+	    if (window.AbortController) {
+	      controller = new AbortController();
+	      signal = controller.signal;
+	    }
+	
 	    var requestData = config.data;
 	    var requestHeaders = config.headers;
 	
 	    if (utils.isFormData(requestData)) {
-	      delete requestHeaders['Content-Type']; // Let the browser set it
+	      delete requestHeaders["Content-Type"]; // Let the browser set it
 	    }
 	    // HTTP basic authentication
 	    if (config.auth) {
-	      var username = config.auth.username || '';
-	      var password = config.auth.password || '';
-	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
+	      var username = config.auth.username || "";
+	      var password = config.auth.password || "";
+	      requestHeaders.Authorization = "Basic " + btoa(username + ":" + password);
 	    }
 	
 	    // Add xsrf header
@@ -1475,8 +1487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // Add xsrf header
 	      var xsrfValue =
-	        (config.withCredentials || isURLSameOrigin(config.url)) &&
-	        config.xsrfCookieName
+	        (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName
 	          ? cookies.read(config.xsrfCookieName)
 	          : undefined;
 	
@@ -1487,10 +1498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var headers = new Headers();
 	    utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-	      if (
-	        typeof requestData === 'undefined' &&
-	        key.toLowerCase() === 'content-type'
-	      ) {
+	      if (typeof requestData === "undefined" && key.toLowerCase() === "content-type") {
 	        // Remove Content-Type if data is undefined
 	        delete requestHeaders[key];
 	      } else {
@@ -1506,29 +1514,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      mode: config.mode,
 	      cache: config.cache,
 	      credentials: config.credentials,
+	      signal: signal,
 	      redirect: config.redirect, // manual, *follow, error
 	      referrer: config.referrer // *client, no-referrer
 	    };
 	
-	    if (config.method.toUpperCase() === 'GET') {
+	    if (config.method.toUpperCase() === "GET") {
 	      delete options.body;
 	    }
 	
-	    var request = new Request(
-	      buildURL(config.url, config.params, config.paramsSerializer),
-	      options
-	    );
+	    var request = new Request(buildURL(config.url, config.params, config.paramsSerializer), options);
 	
 	    // Handle timeout
 	    request.handleTimeout = function handleTimeout() {
-	      reject(
-	        createError(
-	          'timeout of ' + config.timeout + 'ms exceeded',
-	          config,
-	          'ECONNABORTED',
-	          request
-	        )
-	      );
+	      var message = "timeout of " + config.timeout + "ms exceeded";
+	      var response = {
+	        status: 504,
+	        data: { code: 504, message: message }
+	      };
+	      reject(createError(message, config, "ECONNABORTED", request, response));
 	
 	      // Clean up request
 	      request = null;
@@ -1538,35 +1542,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    request.handleError = function handleError(e) {
 	      // Real errors are hidden from us by the browser
 	      // onerror should only fire if it's a network error
-	      reject(createError('Network Error', config, null, request, e));
+	      reject(createError("Network Error", config, null, request, e));
 	
 	      // Clean up request
 	      request = null;
 	    };
 	
 	    request.handleLoad = function(response) {
-	      if (!response.ok) {
-	        error(response);
-	        return;
-	      }
-	      response.json().then(function dispatchRequestJSON(data) {
-	        if (data.hasError) {
-	          error(response);
-	        } else {
-	          var rep = {
-	            data: data,
-	            status: response.status,
-	            statusText: response.statusText,
-	            headers: response.headers,
-	            config: config,
-	            request: request
+	      var rep = {
+	        status: response.status,
+	        statusText: response.statusText,
+	        headers: response.headers,
+	        config: config,
+	        request: request
+	      };
+	      response
+	        .clone()
+	        .json()
+	        .then(function dispatchRequestJSON(data) {
+	          if (data.hasError) {
+	            reject(createError('JSON Error', config, response.status, request, response));
+	          } else {
+	            rep.data = data;
+	            settle(resolve, reject, rep);
+	          }
+	          // Clean up request
+	          request = null;
+	        })
+	        .catch( function() {
+	          rep.data = {
+	            code: response.status,
+	            message: response.statusText
 	          };
-	
 	          settle(resolve, reject, rep);
-	        }
-	        // Clean up request
-	        request = null;
-	      });
+	          // Clean up request
+	          request = null;
+	        });
 	    };
 	
 	    // Handle progress if needed
@@ -1579,13 +1590,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      request.upload.addEventListener('progress', config.onUploadProgress);
 	    }
 	
+	    if (config.cancelToken) {
+	      // Handle cancellation
+	      config.cancelToken.promise.then(function onCanceled(cancel) {
+	        if (!request) {
+	          return;
+	        }
+	
+	        controller && controller.abort();
+	        reject(cancel);
+	        // Clean up request
+	        request = null;
+	      });
+	    }
+	
 	    request.timeout = config.timeout;
 	
 	    if (request.timeout) {
 	      return Promise.race([
 	        requestFetch(request, request.handleLoad, request.handleError),
-	        requestTimeout(config.timeout, request.handleTimeout)
-	      ]).catch(request.handleTimeout);
+	        requestTimeout(config.timeout, request.handleTimeout, controller)
+	      ]);
 	    }
 	    return requestFetch(request, request.handleLoad, request.handleError);
 	
@@ -1739,7 +1764,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
 	    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength',
 	    'validateStatus', 'maxRedirects', 'httpAgent', 'httpsAgent', 'cancelToken',
-	    'socketPath', 'xhrMode', 'cache', 'credentials', 'redirect', 'referrer'
+	    'socketPath', 'xhrMode', 'cache', 'credentials', 'redirect', 'referrer', 'requestId'
 	  ], function defaultToConfig2(prop) {
 	    if (typeof config2[prop] !== 'undefined') {
 	      config[prop] = config2[prop];
